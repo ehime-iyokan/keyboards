@@ -25,11 +25,13 @@ func main() {
 }
 
 const (
-	white = 0x3F3F3FFF
-	red   = 0x00FF00FF
-	green = 0xFF0000FF
-	blue  = 0x0000FFFF
-	black = 0x000000FF
+	white  = 0x3F3F3FFF
+	green  = 0xFF0000FF
+	red    = 0x00FF00FF
+	blue   = 0x0000FFFF
+	yellow = 0x2F7E00FF
+	purple = 0x002F7EFF
+	black  = 0x000000FF
 )
 
 func writeColors(s pio.StateMachine, ws *piolib.WS2812B, colors []uint32) {
