@@ -10,6 +10,7 @@ import (
 	"time"
 
 	keyboard "github.com/sago35/tinygo-keyboard"
+	"github.com/sago35/tinygo-keyboard/keycodes"
 	jp "github.com/sago35/tinygo-keyboard/keycodes/japanese"
 	pio "github.com/tinygo-org/pio/rp2-pio"
 	"github.com/tinygo-org/pio/rp2-pio/piolib"
@@ -33,6 +34,58 @@ const (
 	purple = 0x002F7EFF
 	black  = 0x000000FF
 )
+
+type LEDs struct {
+	Pin         machine.Pin
+	colorLayers [][48]uint32
+	S           pio.StateMachine
+	WS          *piolib.WS2812B
+}
+
+func (l *LEDs) setColors(keylayers *[][]keyboard.Keycode) {
+	colorLayers := make([][48]uint32, len(*keylayers))
+	for i, keycodes := range *keylayers {
+		colors := [48]uint32{}
+		for j, keycode := range keycodes {
+			switch {
+			case keycode == 0:
+				colors[j] = white
+			case isTypeMouse(keycode):
+				colors[j] = yellow
+			case isTypeMediaKey(keycode):
+				colors[j] = red
+			case isTypeModKey(keycode):
+				colors[j] = purple
+			default:
+				colors[j] = black
+			}
+		}
+		colorLayers[i] = colors
+	}
+
+	l.colorLayers = colorLayers
+}
+
+func isTypeMouse(keycode keyboard.Keycode) bool {
+	if (keycode & 0xFF00) == keycodes.TypeMouse {
+		return true
+	}
+	return false
+}
+
+func isTypeModKey(keycode keyboard.Keycode) bool {
+	if (keycode & 0xFF00) == keycodes.TypeModKey {
+		return true
+	}
+	return false
+}
+
+func isTypeMediaKey(keycode keyboard.Keycode) bool {
+	if (keycode & 0xFF00) == keycodes.TypeMediaKey {
+		return true
+	}
+	return false
+}
 
 func writeColors(s pio.StateMachine, ws *piolib.WS2812B, colors []uint32) {
 	ws.WriteRaw(colors)
@@ -58,7 +111,7 @@ func run() error {
 		machine.D7, // not connected
 	}
 
-	sm := d.AddSquaredMatrixKeyboard(colPins, [][]keyboard.Keycode{
+	keyLayers := [][]keyboard.Keycode{
 		{
 			jp.KeyTab, jp.KeyQ, jp.KeyW, jp.KeyE, jp.KeyR, jp.KeyT, jp.KeyY, jp.KeyU, jp.KeyI, jp.KeyO, jp.KeyP, jp.KeyAt,
 			jp.KeyLeftCtrl, jp.KeyA, jp.KeyS, jp.KeyD, jp.KeyF, jp.KeyG, jp.KeyH, jp.KeyJ, jp.KeyK, jp.KeyL, jp.KeySemicolon, jp.KeyColon,
@@ -77,10 +130,33 @@ func run() error {
 			jp.KeyLeftShift, jp.KeyF1, jp.KeyF2, jp.KeyF3, jp.KeyF4, jp.KeyF5, jp.KeyF6, jp.KeyF7, jp.KeyF8, jp.KeyF9, jp.KeyF10, jp.KeyF11,
 			jp.KeyEsc, jp.KeyWindows, jp.KeyLeftAlt, jp.KeyMod1, jp.KeySpace, jp.KeySpace, jp.KeySpace, jp.KeyMod2, jp.KeyHiragana, jp.KeyTo0, jp.KeyPrintscreen, jp.KeyF12,
 		},
-	})
+	}
+	sm := d.AddSquaredMatrixKeyboard(colPins, keyLayers)
+
+	wsPin := machine.GPIO14
+	s, _ := pio.PIO0.ClaimStateMachine()
+	ws, _ := piolib.NewWS2812B(s, wsPin)
+	err := ws.EnableDMA(true)
+	if err != nil {
+		return err
+	}
+	leds := LEDs{
+		Pin: wsPin,
+		S:   s,
+		WS:  ws,
+	}
+	leds.setColors(&keyLayers)
+	writeColors(leds.S, leds.WS, leds.colorLayers[0][:])
+
+	layerBefore := 0
 	sm.SetCallback(func(layer, index int, state keyboard.State) {
 		layer = d.Layer()
 		fmt.Printf("sm: %d %d %d\n", layer, index, state)
+
+		if layer != layerBefore {
+			writeColors(leds.S, leds.WS, leds.colorLayers[layer][:])
+			layerBefore = layer
+		}
 	})
 
 	// override ctrl-h to BackSpace
@@ -112,19 +188,6 @@ func run() error {
 	for i, c := range combos {
 		d.SetCombo(i, c)
 	}
-
-	wsPin := machine.GPIO14
-	s, _ := pio.PIO0.ClaimStateMachine()
-	ws, _ := piolib.NewWS2812B(s, wsPin)
-	err := ws.EnableDMA(true)
-	if err != nil {
-		return err
-	}
-	wsLeds := [48]uint32{}
-	for i := range wsLeds {
-		wsLeds[i] = black
-	}
-	writeColors(s, ws, wsLeds[:])
 
 	loadKeyboardDef()
 
