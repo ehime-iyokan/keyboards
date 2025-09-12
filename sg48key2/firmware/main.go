@@ -59,21 +59,21 @@ func run() error {
 	sm := d.AddSquaredMatrixKeyboard(colPins, [][]keyboard.Keycode{
 		{
 			jp.KeyTab, jp.KeyQ, jp.KeyW, jp.KeyE, jp.KeyR, jp.KeyT, jp.KeyY, jp.KeyU, jp.KeyI, jp.KeyO, jp.KeyP, jp.KeyAt,
-			jp.KeyLeftCtrl, jp.KeyA, jp.KeyS, jp.KeyD, jp.KeyF, jp.KeyG, jp.KeyH, jp.KeyJ, jp.KeyK, jp.KeyL, jp.KeySemicolon, jp.KeyColon,
+			jp.KeyLeftCtrl, jp.KeyA, jp.KeyS, jp.KeyD, jp.KeyF, jp.KeyG, jp.KeyH, jp.KeyJ, jp.KeyK, jp.KeyL, jp.KeyLeftBrace, jp.KeyRightBrace,
 			jp.KeyLeftShift, jp.KeyZ, jp.KeyX, jp.KeyC, jp.KeyV, jp.KeyB, jp.KeyN, jp.KeyM, jp.KeyComma, jp.KeyPeriod, jp.KeySlash, jp.KeyBackslash,
-			jp.KeyEsc, jp.KeyWindows, jp.KeyLeftAlt, jp.KeyMod1, jp.KeySpace, jp.KeySpace, jp.KeySpace, jp.KeyMod2, jp.KeyHiragana, 0, jp.KeyPrintscreen, jp.KeyDelete,
+			jp.KeyLeftCtrl, jp.KeyWindows, jp.KeyLeftAlt, jp.KeyMod1, jp.KeySpace, jp.KeyMod2, 0, jp.KeyLeftAlt, jp.KeyRightCtrl, jp.KeyMod1, jp.KeyMod2, jp.KeyDelete,
 		},
 		{
-			jp.KeyTab, jp.KeyQ, jp.KeyF15, jp.KeyEnd, jp.KeyF17, jp.KeyF18, jp.KeyY, jp.KeyU, jp.KeyTab, jp.KeyO, jp.WheelUp, jp.KeyAt,
-			jp.KeyLeftCtrl, jp.KeyHome, jp.KeyS, jp.MouseRight, jp.MouseLeft, jp.MouseBack, jp.KeyLeft, jp.KeyDown, jp.KeyUp, jp.KeyRight, jp.KeyEnter, jp.KeyEsc,
-			jp.KeyLeftShift, jp.KeyF13, jp.KeyF14, jp.MouseMiddle, jp.KeyF16, jp.MouseForward, jp.WheelDown, jp.KeyM, jp.KeyComma, jp.KeyPeriod, jp.KeySlash, jp.KeyBackslash,
-			jp.KeyEsc, jp.KeyWindows, jp.KeyLeftAlt, jp.KeyMod1, jp.KeySpace, jp.KeySpace, jp.KeySpace, jp.KeyMod2, jp.KeyHiragana, jp.KeyTo2, jp.KeyPrintscreen, jp.KeyDelete,
+			jp.KeyTab, jp.Key1, jp.Key2, jp.Key3, jp.Key4, jp.Key5, jp.Key6, jp.Key7, jp.Key8, jp.Key9, jp.Key0, jp.KeyHat,
+			jp.KeyLeftCtrl, jp.KeyHankaku, jp.MouseMiddle, jp.MouseRight, jp.MouseLeft, jp.KeyMinus, jp.KeyLeft, jp.KeyDown, jp.KeyUp, jp.KeyRight, jp.KeySemicolon, jp.KeyColon,
+			jp.KeyLeftShift, jp.KeyF1, jp.KeyF2, jp.KeyF3, jp.KeyF4, jp.KeyF5, jp.KeyF9, jp.KeyF10, jp.KeyF11, jp.KeyF12, jp.KeyEnter, jp.KeyBackspace,
+			jp.KeyLeftCtrl, jp.KeyWindows, jp.KeyLeftAlt, jp.KeyMod1, jp.KeySpace, jp.KeyMod2, 0, jp.KeyLeftAlt, jp.KeyRightCtrl, jp.KeyMod1, jp.KeyMod2, jp.KeyDelete,
 		},
 		{
-			jp.KeyTab, jp.Key1, jp.Key2, jp.Key3, jp.Key4, jp.Key5, jp.Key6, jp.Key7, jp.Key8, jp.Key9, jp.Key0, jp.KeyBackspace,
-			jp.KeyLeftCtrl, jp.KeyMinus, jp.KeyHat, jp.KeyBackslash2, jp.KeyLeftBrace, jp.KeyRightBrace, jp.KeyHome, jp.KeyPageDown, jp.KeyPageUp, jp.KeyEnd, jp.KeyEnter, jp.KeyEsc,
-			jp.KeyLeftShift, jp.KeyF1, jp.KeyF2, jp.KeyF3, jp.KeyF4, jp.KeyF5, jp.KeyF6, jp.KeyF7, jp.KeyF8, jp.KeyF9, jp.KeyF10, jp.KeyF11,
-			jp.KeyEsc, jp.KeyWindows, jp.KeyLeftAlt, jp.KeyMod1, jp.KeySpace, jp.KeySpace, jp.KeySpace, jp.KeyMod2, jp.KeyHiragana, jp.KeyTo0, jp.KeyPrintscreen, jp.KeyF12,
+			jp.KeyTab, jp.KeyF1, jp.KeyF2, jp.KeyF3, jp.KeyF4, jp.KeyF5, jp.KeyF6, jp.KeyF7, jp.KeyF8, jp.KeyF9, 0, 0,
+			jp.KeyLeftCtrl, 0, 0, jp.KeyPrintscreen, 0, jp.WheelUp, jp.KeyMediaVolumeInc, jp.KeyHome, jp.KeyPageUp, 0, 0, jp.KeyMediaBrightnessUp,
+			jp.KeyLeftShift, 0, 0, 0, 0, jp.WheelDown, jp.KeyMediaVolumeDec, jp.KeyEnd, jp.KeyPageDown, 0, 0, jp.KeyMediaBrightnessDown,
+			jp.KeyLeftCtrl, jp.KeyWindows, jp.KeyLeftAlt, jp.KeyMod1, jp.KeySpace, jp.KeyMod2, 0, jp.KeyLeftAlt, jp.KeyRightCtrl, jp.KeyMod1, jp.KeyMod2, jp.KeyDelete,
 		},
 	})
 	sm.SetCallback(func(layer, index int, state keyboard.State) {
